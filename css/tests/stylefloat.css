@@ -1,6 +1,13 @@
 body {
   margin: 0;
 }
+
+/* Faire en sorte que l'image ne fasse pas plus en largeur que son 
+container */
+img {
+  max-width: 100%;
+}
+
 .col-4 {
   float: left;
   width: 33.33333333%;
