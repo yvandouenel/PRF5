@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+}
+.col-4 {
+  float: left;
+  width: 33.33333333%;
+}
+.col-4 div {
+  /* Propriétés de boîte */
+  padding: 5%;
+  border: 1px solid black;
+  margin: 3%;
+  border-radius: 10px;
+  box-shadow: 10px 5px 5px red;
+}
+
+main {
+  border: 3px solid red;
+}
+main:after {
+  content: "";
+  clear: both;
+  display: block;
+  border: 5px solid blue;
+}
+
+span {
+  border: 1px solid black;
+  display: block;
+}
