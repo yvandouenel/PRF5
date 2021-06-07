@@ -1,0 +1,41 @@
+/* Selecteur par descendance */
+header nav {
+  background-color: black;
+}
+header nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+}
+header nav ul li {
+  margin: 5px 15px;
+}
+header nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+body > nav ul {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 50px;
+}
+body > nav ul li a {
+  background-color: #66bfcc;
+  border-radius: 8px;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: white;
+}
+
+.logo-baseline {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 90%;
+  margin: 20px auto 0 auto; /* Center à l'ancienne */
+}
+header h2 {
+  font-size: 1.6rem; /* 16 * 2 */
+  width: 55%;
+  color: #73941b;
+}
