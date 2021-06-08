@@ -1,3 +1,6 @@
+body {
+  font-family: "Baloo Tammudu 2", cursive;
+}
 /* Selecteur par descendance */
 header nav {
   background-color: black;
@@ -38,4 +41,18 @@ header h2 {
   font-size: 1.6rem; /* 16 * 2 */
   width: 55%;
   color: #73941b;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: brown;
+  border: 1px solide transparent;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+footer a {
+  color: white;
 }

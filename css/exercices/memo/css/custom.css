@@ -1,0 +1,20 @@
+span.icon-twitter {
+  color: green;
+  font-size: 5rem;
+}
+span.icon-twitter:hover {
+  color: blue;
+  font-size: 5rem;
+}
+
+span.icon-twitter:after {
+  content: " après le petit oiseau !";
+}
+p:after {
+  content: "Tél : ";
+}
+.btn:hover {
+  background-color: red;
+  color: white;
+  cursor: pointer;
+}
