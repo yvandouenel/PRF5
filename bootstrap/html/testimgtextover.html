@@ -11,7 +11,10 @@
     <main class="container">
       <div class="row">
         <div class="col">
+          <!-- Le lien est en position relative et englobe texte
+          et image mais pas le lien vers le festival  -->
           <a href="https://domaine-do.fr" class="img-text-wrapper d-block">
+            <!-- La zone de texte est positionnée en absolute -->
             <div class="text-wrapper">
               <div>&nbsp;</div>
               <div class="degrade">
@@ -27,12 +30,16 @@
                 </div>
               </div>
             </div>
+            <!-- L'image est positionnée normalement -->
             <img
               class="img-fluid"
               src="http://www.placeimg.com/432/600"
               alt="Headshot of George Washington"
             />
           </a>
+          <!-- Le lien vers le festival est en dehors du bloc 
+          texte + image et est positionnée en absolute par rapport
+        à la colonne -->
           <a href="https://coopernet.fr" class="festival btn btn-dark"
             >Radio France</a
           >
