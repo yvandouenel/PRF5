@@ -20,3 +20,6 @@ console.log(`Prénom de p1 : `, p1.firstname);
 
 p1.vote();
 p1["vote"]();
+
+var i;
+console.log(`i : `, i);
