@@ -34,12 +34,14 @@ function createMarkup(markup_name, text, parent, attributes) {
 const container = createMarkup("main", "", document.body, [
   {
     name: "class",
-    value: "container",
+    value: "container mt-4",
   },
 ]);
 
 // Création du formulaire
-const form = createMarkup("form", "", container);
+const form = createMarkup("form", "", container, [
+  { name: "class", value: "d-flex justify-content-center" },
+]);
 const input = createMarkup("input", "", form, [
   { name: "type", value: "text" },
   { name: "class", value: "form-control" },
@@ -79,7 +81,7 @@ form.onsubmit = function (event) {
     input.value = "";
 
     const wrapper_button = createMarkup("div", "", section, [
-      { name: "class", value: "" },
+      { name: "class", value: "d-flex align-items-start" },
     ]);
     // Création des boutons
     const button_validate = createMarkup("button", "Valider", wrapper_button, [
