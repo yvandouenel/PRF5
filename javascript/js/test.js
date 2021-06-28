@@ -1,26 +1,42 @@
-// fonction construteur
-class Pokemon {
-  constructor(name) {
-    // this.name est une propriété
-    this.name = name;
-  }
-  // cette méthode est mise en commun dans le prototype
-  // du constructeur de Pokemon pour toutes les instances
-  introduceHisSelf() {
-    console.log(`Hello, my name is ${this.name}`);
-  }
+// récupération de l'élément du DOM H1
+//const h1 = document.getElementById("title1");
+const h1 = document.querySelector("body #title1");
+h1.style.color = "red";
+
+function createDOMElement(markup_name, text, parent, attributes) {
+  // Création d'élément du dom
+  const element = document.createElement(markup_name);
+
+  // Ajout de texte à un élément du dom
+  element.textContent = text;
+
+  // Positionner un élément dans le DOM
+  parent.appendChild(element);
+
+  // Ajout d'attributs
+  attributes.forEach((attribute) => {
+    element.setAttribute(attribute.name, attribute.value);
+  });
+
+  return element;
 }
 
-// tadmorv est instance de Pokemon
-const tadmorv = new Pokemon("Tadmorv"); // passage d'un argument
+const p = createDOMElement("p", "Texte ici ", document.body, [
+  { name: "class", value: "danger" },
+]);
 
-// appel de la méthode depuis une instance d'objet
-tadmorv.introduceHisSelf();
-console.log(`tadmorv : `, tadmorv);
+// Attribution d'un gestionnaire d'événement
+// event Handle
+p.onclick = function () {
+  document.getElementById("title1").hidden = !document.getElementById("title1")
+    .hidden;
+};
 
-// tadmorv est instance de Pokemon
-const miaouss = new Pokemon("miaouss"); // passage d'un argument
+const a = createDOMElement("a", "Ceci est un lien", document.body, [
+  { name: "href", value: "https://coopernet.fr" },
+]);
 
-// appel de la méthode depuis une instance d'objet
-miaouss.introduceHisSelf();
-console.log(`miaouss : `, miaouss);
+a.onclick = function (event) {
+  // suppression des comportements par défaut (ici le changement de page)
+  event.preventDefault();
+};
