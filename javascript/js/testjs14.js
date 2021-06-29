@@ -33,8 +33,43 @@ function createMarkup(markup_name, text, parent, attributes) {
 
 // Création des éléments du dom pour créer une liste déroulante
 const select_region = createMarkup("select", "", document.body);
+const select_departement = createMarkup("select", "", document.body);
+
+// Gestion de l'événement onchange du select
+// permet de récupérer la valeur de l'option choisie (code région)
 select_region.onchange = () => {
   console.log(`région choisie : `, select_region.value);
+
+  // récupération des données qui correspondent à la région cliquée
+  fetch(`https://geo.api.gouv.fr/regions/${select_region.value}/departements`)
+    .then((data) => {
+      // data est de type Response
+      console.log(`data : `, data);
+      // Je vérifie si la données est bien du json
+      // via la fonction json qui renvoie
+      return data.json();
+    })
+    .then(function (data) {
+      // Data est de type tableau d'objets
+      console.log(`data : `, data);
+
+      // Suppression de toutes les options dans select_departement
+      select_departement.querySelectorAll("option").forEach((option_dpt) => {
+        option_dpt.remove();
+      });
+
+      data.forEach((departement) => {
+        createMarkup("option", departement.nom, select_departement, [
+          {
+            name: "value",
+            value: departement.code,
+          },
+        ]);
+      });
+    })
+    .catch((error) => {
+      console.error(`erreur : `, error.message);
+    });
 };
 
 // Récupération des données
