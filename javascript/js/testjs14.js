@@ -32,7 +32,10 @@ function createMarkup(markup_name, text, parent, attributes) {
 }
 
 // Création des éléments du dom pour créer une liste déroulante
-const select = createMarkup("select", "", document.body);
+const select_region = createMarkup("select", "", document.body);
+select_region.onchange = () => {
+  console.log(`région choisie : `, select_region.value);
+};
 
 // Récupération des données
 fetch("https://geo.api.gouv.fr/regions")
@@ -48,7 +51,12 @@ fetch("https://geo.api.gouv.fr/regions")
     data = data.sort();
     console.log(`data : `, data);
     data.forEach((region) => {
-      createMarkup("option", region.nom, select);
+      createMarkup("option", region.nom, select_region, [
+        {
+          name: "value",
+          value: region.code,
+        },
+      ]);
     });
   })
   .catch((error) => {
