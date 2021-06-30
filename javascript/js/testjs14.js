@@ -34,6 +34,7 @@ function createMarkup(markup_name, text, parent, attributes) {
 // Création des éléments du dom pour créer une liste déroulante
 const select_region = createMarkup("select", "", document.body);
 const select_departement = createMarkup("select", "", document.body);
+const select_commune = createMarkup("select", "", document.body);
 
 // Gestion de l'événement onchange du select
 // permet de récupérer la valeur de l'option choisie (code région)
@@ -66,6 +67,74 @@ select_region.onchange = () => {
           },
         ]);
       });
+    })
+    .catch((error) => {
+      console.error(`erreur : `, error.message);
+    });
+};
+select_departement.onchange = () => {
+  console.log(`departement choisi : `, select_departement.value);
+
+  // récupération des données qui correspondent à la région cliquée
+  fetch(
+    `https://geo.api.gouv.fr/departements/${select_departement.value}/communes`
+  )
+    .then((data) => {
+      // data est de type Response
+      console.log(`data : `, data);
+      // Je vérifie si la données est bien du json
+      // via la fonction json qui renvoie
+      return data.json();
+    })
+    .then(function (data) {
+      // Data est de type tableau d'objets
+      console.log(`data : `, data);
+
+      // Suppression de toutes les options dans select_commune
+      select_commune.querySelectorAll("option").forEach((option_commune) => {
+        option_commune.remove();
+      });
+
+      data.forEach((commune) => {
+        createMarkup("option", commune.nom, select_commune, [
+          {
+            name: "value",
+            value: commune.code,
+          },
+        ]);
+      });
+    })
+    .catch((error) => {
+      console.error(`erreur : `, error.message);
+    });
+};
+
+select_commune.onchange = () => {
+  console.log(`commune choisie : `, select_commune.value);
+
+  // récupération des données qui correspondent au département cliqué
+  fetch(`https://geo.api.gouv.fr/communes/${select_commune.value}`)
+    .then((data) => {
+      // data est de type Response
+      console.log(`data : `, data);
+      // Je vérifie si la données est bien du json
+      // via la fonction json qui renvoie une promesse
+      return data.json();
+    })
+    .then(function (data) {
+      // Data est de type tableau d'objets
+      console.log(`data commune : `, data);
+      const name = createMarkup("h1", data.nom, document.body);
+      const p = createMarkup(
+        "p",
+        "Population : " + data.population,
+        document.body
+      );
+      const cp = createMarkup(
+        "p",
+        "Code postal : " + data.codesPostaux,
+        document.body
+      );
     })
     .catch((error) => {
       console.error(`erreur : `, error.message);
