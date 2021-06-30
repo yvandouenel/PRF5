@@ -35,6 +35,9 @@ function createMarkup(markup_name, text, parent, attributes) {
 const select_region = createMarkup("select", "", document.body);
 const select_departement = createMarkup("select", "", document.body);
 const select_commune = createMarkup("select", "", document.body);
+let wrapper_commune = createMarkup("div", "", document.body, [
+  { name: "id", value: "wrapper-commune" },
+]);
 
 // Gestion de l'événement onchange du select
 // permet de récupérer la valeur de l'option choisie (code région)
@@ -53,11 +56,20 @@ select_region.onchange = () => {
     .then(function (data) {
       // Data est de type tableau d'objets
       console.log(`data : `, data);
+      data.unshift({ nom: "Sélectionner un département", code: "00" });
 
       // Suppression de toutes les options dans select_departement
       select_departement.querySelectorAll("option").forEach((option_dpt) => {
         option_dpt.remove();
       });
+
+      // Suppression de toutes les options dans select_commune
+      select_commune.querySelectorAll("option").forEach((option_commune) => {
+        option_commune.remove();
+      });
+
+      // Suppresson du wrapper_commune
+      wrapper_commune.remove();
 
       data.forEach((departement) => {
         createMarkup("option", departement.nom, select_departement, [
@@ -89,7 +101,7 @@ select_departement.onchange = () => {
     .then(function (data) {
       // Data est de type tableau d'objets
       console.log(`data : `, data);
-
+      data.unshift({ nom: "Sélectionner une commune", code: "00" });
       // Suppression de toutes les options dans select_commune
       select_commune.querySelectorAll("option").forEach((option_commune) => {
         option_commune.remove();
@@ -116,7 +128,7 @@ select_commune.onchange = () => {
   fetch(`https://geo.api.gouv.fr/communes/${select_commune.value}`)
     .then((data) => {
       // data est de type Response
-      console.log(`data : `, data);
+      console.log(`data de type Object Response : `, data);
       // Je vérifie si la données est bien du json
       // via la fonction json qui renvoie une promesse
       return data.json();
@@ -124,16 +136,29 @@ select_commune.onchange = () => {
     .then(function (data) {
       // Data est de type tableau d'objets
       console.log(`data commune : `, data);
-      const name = createMarkup("h1", data.nom, document.body);
-      const p = createMarkup(
+      // Teste si l'élément du dom qui a pour id wrapper-commune existe
+      // dans l'affirmative, on le supprime
+      if (document.getElementById("wrapper-commune")) {
+        document.getElementById("wrapper-commune").remove();
+      }
+      // Création d'un wrapper (div)
+      wrapper_commune = createMarkup("div", "", document.body, [
+        { name: "id", value: "wrapper-commune" },
+      ]);
+      setTimeout(() => {
+        wrapper_commune.style.opacity = 1;
+        wrapper_commune.style.width = "260px";
+      }, 200);
+      const name = createMarkup("h1", data.nom, wrapper_commune);
+      const population = createMarkup(
         "p",
         "Population : " + data.population,
-        document.body
+        wrapper_commune
       );
       const cp = createMarkup(
         "p",
         "Code postal : " + data.codesPostaux,
-        document.body
+        wrapper_commune
       );
     })
     .catch((error) => {
@@ -152,7 +177,8 @@ fetch("https://geo.api.gouv.fr/regions")
   })
   .then(function (data) {
     // Data est de type tableau d'objets
-    data = data.sort();
+    // Ajout d'un objet en début de tableau
+    data.unshift({ nom: "Sélectionner une région", code: "00" });
     console.log(`data : `, data);
     data.forEach((region) => {
       createMarkup("option", region.nom, select_region, [
@@ -164,5 +190,5 @@ fetch("https://geo.api.gouv.fr/regions")
     });
   })
   .catch((error) => {
-    console.error(`erreur : `, error.message);
+    console.error(`erreur de récupération des régions : `, error.message);
   });

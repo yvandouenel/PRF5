@@ -6,9 +6,10 @@ select {
   width: 300px;
   margin: 10px auto;
 }
-#commune {
+#wrapper-commune {
   display: table;
-  width: 260px;
+  width: 0;
+  overflow: hidden;
   padding: 20px;
   margin: 0 auto;
   border: 1px solid black;
@@ -16,5 +17,4 @@ select {
   background-color: white;
   opacity: 0;
   transition: all 3s;
-  -webkit-transition: all 3s;
 }
