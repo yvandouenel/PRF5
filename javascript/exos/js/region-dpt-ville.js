@@ -1,0 +1,194 @@
+/**
+ * Fonction qui crée une instance d'élément du DOM
+ * @param {string} markup_name
+ * @param {string} text
+ * @param {Objet} parent DOM element
+ * @param {array} attributes tableau d'objets
+ * @return {0bject} element du DOM
+ */
+function createMarkup(markup_name, text, parent, attributes) {
+  // la variable markup stocke le retour de la fonction
+  // createElement. Ce retour a pour type "object". Cet objet est
+  // un élément du DOM. markup pointe donc (ou stocke) vers  un élément du dom
+  const markup = document.createElement(markup_name);
+
+  // Ajout de texte à l'élément du dom markup
+  markup.textContent = text;
+
+  // Positionnement de markup en tant que dernier fils de l'élément
+  // du dom "parent"
+  parent.appendChild(markup);
+
+  // Si attribute est défini et que c'est bien un tableau qui a au moins un élément alors on parcourt le tableau d'objets. Pour chaque objet, on fait appel à setAttribute pour ajouter l'attribut qui correspond au nom (name) et à la valeur (value)
+  if (attributes && Array.isArray(attributes) && attributes.length > 0) {
+    // parcours du tableau attributes
+    attributes.forEach((element) => {
+      markup.setAttribute(element.name, element.value);
+    });
+  }
+
+  // La fonction renvoie l'élément du DOM markup
+  return markup;
+}
+
+// Création des éléments du dom pour créer une liste déroulante
+const select_region = createMarkup("select", "", document.body);
+const select_departement = createMarkup("select", "", document.body);
+const select_commune = createMarkup("select", "", document.body);
+let wrapper_commune = createMarkup("div", "", document.body, [
+  { name: "id", value: "wrapper-commune" },
+]);
+
+// Gestion de l'événement onchange du select
+// permet de récupérer la valeur de l'option choisie (code région)
+select_region.onchange = () => {
+  console.log(`région choisie : `, select_region.value);
+
+  // récupération des données qui correspondent à la région cliquée
+  fetch(`https://geo.api.gouv.fr/regions/${select_region.value}/departements`)
+    .then((data) => {
+      // data est de type Response
+      console.log(`data : `, data);
+      // Je vérifie si la données est bien du json
+      // via la fonction json qui renvoie
+      return data.json();
+    })
+    .then(function (data) {
+      // Data est de type tableau d'objets
+      console.log(`data : `, data);
+      data.unshift({ nom: "Sélectionner un département", code: "00" });
+
+      // Suppression de toutes les options dans select_departement
+      select_departement.querySelectorAll("option").forEach((option_dpt) => {
+        option_dpt.remove();
+      });
+
+      // Suppression de toutes les options dans select_commune
+      select_commune.querySelectorAll("option").forEach((option_commune) => {
+        option_commune.remove();
+      });
+
+      // Suppresson du wrapper_commune
+      wrapper_commune.remove();
+
+      data.forEach((departement) => {
+        createMarkup("option", departement.nom, select_departement, [
+          {
+            name: "value",
+            value: departement.code,
+          },
+        ]);
+      });
+    })
+    .catch((error) => {
+      console.error(`erreur : `, error.message);
+    });
+};
+select_departement.onchange = () => {
+  console.log(`departement choisi : `, select_departement.value);
+
+  // récupération des données qui correspondent à la région cliquée
+  fetch(
+    `https://geo.api.gouv.fr/departements/${select_departement.value}/communes`
+  )
+    .then((data) => {
+      // data est de type Response
+      console.log(`data : `, data);
+      // Je vérifie si la données est bien du json
+      // via la fonction json qui renvoie
+      return data.json();
+    })
+    .then(function (data) {
+      // Data est de type tableau d'objets
+      console.log(`data : `, data);
+      data.unshift({ nom: "Sélectionner une commune", code: "00" });
+      // Suppression de toutes les options dans select_commune
+      select_commune.querySelectorAll("option").forEach((option_commune) => {
+        option_commune.remove();
+      });
+
+      data.forEach((commune) => {
+        createMarkup("option", commune.nom, select_commune, [
+          {
+            name: "value",
+            value: commune.code,
+          },
+        ]);
+      });
+    })
+    .catch((error) => {
+      console.error(`erreur : `, error.message);
+    });
+};
+
+select_commune.onchange = () => {
+  console.log(`commune choisie : `, select_commune.value);
+
+  // récupération des données qui correspondent au département cliqué
+  fetch(`https://geo.api.gouv.fr/communes/${select_commune.value}`)
+    .then((data) => {
+      // data est de type Response
+      console.log(`data de type Object Response : `, data);
+      // Je vérifie si la données est bien du json
+      // via la fonction json qui renvoie une promesse
+      return data.json();
+    })
+    .then(function (data) {
+      // Data est de type tableau d'objets
+      console.log(`data commune : `, data);
+      // Teste si l'élément du dom qui a pour id wrapper-commune existe
+      // dans l'affirmative, on le supprime
+      if (document.getElementById("wrapper-commune")) {
+        document.getElementById("wrapper-commune").remove();
+      }
+      // Création d'un wrapper (div)
+      wrapper_commune = createMarkup("div", "", document.body, [
+        { name: "id", value: "wrapper-commune" },
+      ]);
+      setTimeout(() => {
+        wrapper_commune.style.opacity = 1;
+        wrapper_commune.style.width = "260px";
+      }, 200);
+      const name = createMarkup("h1", data.nom, wrapper_commune);
+      const population = createMarkup(
+        "p",
+        "Population : " + data.population,
+        wrapper_commune
+      );
+      const cp = createMarkup(
+        "p",
+        "Code postal : " + data.codesPostaux,
+        wrapper_commune
+      );
+    })
+    .catch((error) => {
+      console.error(`erreur : `, error.message);
+    });
+};
+
+// Récupération des données
+fetch("https://geo.api.gouv.fr/regions")
+  .then((data) => {
+    // data est de type Response
+    console.log(`data : `, data);
+    // Je vérifie si la données est bien du json
+    // via la fonction json qui renvoie
+    return data.json();
+  })
+  .then(function (data) {
+    // Data est de type tableau d'objets
+    // Ajout d'un objet en début de tableau
+    data.unshift({ nom: "Sélectionner une région", code: "00" });
+    console.log(`data : `, data);
+    data.forEach((region) => {
+      createMarkup("option", region.nom, select_region, [
+        {
+          name: "value",
+          value: region.code,
+        },
+      ]);
+    });
+  })
+  .catch((error) => {
+    console.error(`erreur de récupération des régions : `, error.message);
+  });

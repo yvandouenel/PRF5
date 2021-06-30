@@ -1,0 +1,20 @@
+body {
+  background-color: thistle;
+}
+select {
+  display: table;
+  width: 300px;
+  margin: 10px auto;
+}
+#wrapper-commune {
+  display: table;
+  width: 0;
+  overflow: hidden;
+  padding: 20px;
+  margin: 0 auto;
+  border: 1px solid black;
+  border-radius: 8px;
+  background-color: white;
+  opacity: 0;
+  transition: all 3s;
+}
